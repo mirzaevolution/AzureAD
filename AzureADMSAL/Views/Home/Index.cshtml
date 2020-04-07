@@ -1,0 +1,14 @@
+﻿@using System.Security.Claims
+@model List<Claim>
+@{
+	ViewData["Title"] = "Home Page";
+}
+
+<h3>All claims</h3>
+
+<ul class="list-group list-group-flush">
+	@foreach (var claim in Model)
+	{
+		<li class="list-group-item"><span class="badge badge-info">@claim.Type</span>: @claim.Value</li>
+	}
+</ul>
