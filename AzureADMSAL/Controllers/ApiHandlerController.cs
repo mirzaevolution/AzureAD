@@ -94,6 +94,7 @@ namespace AzureADMSAL.Controllers
                 AuthenticationContext authenticationContext = new AuthenticationContext(
                         $"{_options.Value.Instance}{_options.Value.TenantId}", distributedMemoryTokenCache
                     );
+
                 var result = await authenticationContext
                     .AcquireTokenSilentAsync(
                         _options.Value.Resource,

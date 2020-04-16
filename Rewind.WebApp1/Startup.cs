@@ -10,21 +10,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Policy;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using IdentityModel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using AzureADMSAL.Helpers;
-using IdentityModel.Client;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Microsoft.AspNetCore.Authentication.AzureAD.UI;
-using AzureADMSAL.Models;
+using Microsoft.AspNetCore.Http;
+using IdentityModel;
+using Rewind.WebApp1.Models;
+using Rewind.WebApp1.Helpers;
 using System.Security.Claims;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace AzureADMSAL
+namespace Rewind.WebApp1
 {
     public class Startup
     {
@@ -38,58 +34,57 @@ namespace AzureADMSAL
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            AzureActiveDirectoryOptions aadOptions = new AzureActiveDirectoryOptions();
-            Configuration.Bind("AzureActiveDirectory", aadOptions);
-
+            AzureAdModel azureAdModel = new AzureAdModel();
+            Configuration.Bind("AzureActiveDirectory", azureAdModel);
             services.AddOptions();
-            var section = Configuration.GetSection("AzureActiveDirectory");
-            services.Configure<AzureActiveDirectoryOptions>(section);
-            //services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
-            //    .AddAzureAD(options => Configuration.Bind("AzureActiveDirectory", options));
+            IConfigurationSection azureAdOption = Configuration.GetSection("AzureActiveDirectory");
+            IConfigurationSection targetApiOption = Configuration.GetSection("TargetApi");
+            services.Configure<AzureAdModel>(azureAdOption);
+            services.Configure<TargetApiModel>(targetApiOption);
+
             services.AddAuthentication(options =>
             {
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-
             })
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-                 {
-                     options.AccessDeniedPath = new PathString("/AccessDenied");
-                 })
+                {
+                    options.AccessDeniedPath = new PathString("/AccessDenied");
+                })
                 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                 {
-                    options.Authority = $"{aadOptions.Instance}{aadOptions.TenantId}";
-                    options.ClientId = aadOptions.ClientId;
-                    options.ClientSecret = aadOptions.ClientSecret;
+                    options.Authority = azureAdModel.Authority;
+                    options.ClientId = azureAdModel.ClientId;
+                    options.ClientSecret = azureAdModel.ClientSecret;
+                    options.CallbackPath = azureAdModel.CallbackPath;
+                    options.Resource = azureAdModel.Resource;
                     options.ResponseType = OidcConstants.ResponseTypes.CodeIdToken;
-                    options.AccessDeniedPath = new PathString("/AccessDenied");
-                    options.UseTokenLifetime = true;
-                    options.CallbackPath = aadOptions.CallbackPath;
-                    options.Resource = aadOptions.Resource;
-                    options.Events.OnAuthorizationCodeReceived += HandleAuthorizationCode;
+                    options.SaveTokens = true;
+                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.Events.OnAuthorizationCodeReceived += HandleApiToken;
                 });
             services.AddDistributedMemoryCache();
-
             services.AddControllersWithViews();
         }
 
-        private async Task HandleAuthorizationCode(AuthorizationCodeReceivedContext context)
+        private async Task HandleApiToken(AuthorizationCodeReceivedContext context)
         {
             if (!context.HandledCodeRedemption)
             {
-                string userObjectId = context.Principal.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier");
-                ClientCredential clientCredential = new ClientCredential(context.Options.ClientId, context.Options.ClientSecret);
+
+                string userId = context.Principal.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier");
                 IDistributedCache distributedCache = context.HttpContext.RequestServices.GetService<IDistributedCache>();
-                DistributedMemoryTokenCache distributedMemoryTokenCache = new DistributedMemoryTokenCache(userObjectId, distributedCache);
-                AuthenticationContext authenticationContext = new AuthenticationContext(context.Options.Authority, distributedMemoryTokenCache);
+                DistributedMemoryTokenCache tokenCache = new DistributedMemoryTokenCache(userId, distributedCache);
+                string authority = context.Options.Authority;
                 string code = context.TokenEndpointRequest.Code;
-                var authenticateResult = await authenticationContext
-                    .AcquireTokenByAuthorizationCodeAsync(code,
-                        new Uri(context.TokenEndpointRequest.RedirectUri),
-                        clientCredential,
-                        context.Options.Resource);
-                context.HandleCodeRedemption(authenticateResult.AccessToken, authenticateResult.IdToken);
+                string resource = context.Options.Resource;
+                string clientId = context.Options.ClientId;
+                string clientSecret = context.Options.ClientSecret;
+                string redirectUri = context.TokenEndpointRequest.RedirectUri;
+                AuthenticationContext authenticationContext = new AuthenticationContext(authority, true, tokenCache);
+                var result = await authenticationContext.AcquireTokenByAuthorizationCodeAsync(code, new Uri(redirectUri), new ClientCredential(clientId, clientSecret), resource);
+                context.HandleCodeRedemption(result.AccessToken, result.IdToken);
             }
         }
 
@@ -106,13 +101,12 @@ namespace AzureADMSAL
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

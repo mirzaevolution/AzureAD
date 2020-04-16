@@ -6,7 +6,6 @@ namespace AzureADAPI.Helpers
 {
     public class ReadAcccessScopeHandler : AuthorizationHandler<ReadAccessScopeRequirement>
     {
-
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ReadAccessScopeRequirement requirement)
         {
 
