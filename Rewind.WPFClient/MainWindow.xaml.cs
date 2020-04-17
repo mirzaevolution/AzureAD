@@ -84,7 +84,7 @@ namespace Rewind.WPFClient
         }
         private async Task UIAuthentication()
         {
-            _authenticationResult = await _authenticationContext.AcquireTokenAsync(_resourceUri, _clientId, new Uri(_redirectUri), new PlatformParameters(PromptBehavior.Always));
+            _authenticationResult = await _authenticationContext.AcquireTokenAsync(_resourceUri, _clientId, new Uri(_redirectUri), new PlatformParameters(PromptBehavior.Auto));
         }
         private async void ButtonCallAPIClickHandler(object sender, RoutedEventArgs e)
         {

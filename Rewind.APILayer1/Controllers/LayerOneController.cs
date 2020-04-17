@@ -66,6 +66,10 @@ namespace Rewind.APILayer1.Controllers
             }
         }
 
+
+        [HttpGet("GetClientCredentialMessage")]
+        [Authorize(Roles = "Reader")]
+        public string GetClientCredentialMessage() => "Hello world!! You are authenticated with Client Credential";
         private async Task<string> GetAccessToken()
         {
             try
