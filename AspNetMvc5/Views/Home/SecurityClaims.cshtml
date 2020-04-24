@@ -1,0 +1,21 @@
+﻿@using AspNetMvc5.Models
+@model List<SecurityDataClaim>
+@{
+    ViewBag.Title = "Security Claims";
+} 
+
+<h2>Security Claims</h2>
+<br />
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>Key</th>
+		<th>Data</th>
+	</tr>
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td>@item.Key</td>
+			<td>@item.Data</td>
+		</tr>
+	}
+</table>

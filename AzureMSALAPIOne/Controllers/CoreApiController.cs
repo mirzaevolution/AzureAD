@@ -122,7 +122,6 @@ namespace AzureMSALAPIOne.Controllers
             }
             return Task.CompletedTask;
         }
-
         private Task OnBeforeCacheHandler(TokenCacheNotificationArgs context)
         {
             string usernameOrEmail = string.Empty;
