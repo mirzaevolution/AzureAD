@@ -19,10 +19,7 @@ namespace Rewind.WPFClient
 
         private void Load()
         {
-            lock (_syncLock)
-            {
-                DeserializeAdalV3(File.Exists(_fileLocation) ? File.ReadAllBytes(_fileLocation) : null);
-            }
+            DeserializeAdalV3(File.Exists(_fileLocation) ? File.ReadAllBytes(_fileLocation) : null);
         }
         private void Persist()
         {

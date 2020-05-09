@@ -53,8 +53,10 @@ namespace AzureMSALWebApp.Controllers
         [Route("/Login")]
         public IActionResult Login()
         {
-            AuthenticationProperties props = new AuthenticationProperties();
-            props.RedirectUri = Url.Action("Index", "Home", null, Request.Scheme);
+            AuthenticationProperties props = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("Index", "Home", null, Request.Scheme)
+            };
 
             return Challenge(props, OpenIdConnectDefaults.AuthenticationScheme);
         }

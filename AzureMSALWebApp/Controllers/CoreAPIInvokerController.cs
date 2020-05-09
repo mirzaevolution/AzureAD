@@ -48,16 +48,7 @@ namespace AzureMSALWebApp.Controllers
                         );
                     return View((object)response);
                 case "401":
-                    AuthenticationProperties properties = new AuthenticationProperties();
-                    ICollection<string> scopes = new string[]
-                    {
-                        OidcConstants.StandardScopes.OpenId,
-                        OidcConstants.StandardScopes.OfflineAccess,
-                        OidcConstants.StandardScopes.Profile
-                    }.Union(_options.Value.Scopes.Split(':')).ToList();
-
-                    properties.SetParameter<ICollection<string>>(OpenIdConnectParameterNames.Scope, scopes);
-                    return Challenge(properties, OpenIdConnectDefaults.AuthenticationScheme);
+                    return ReAuth();
                 case "500":
                     return View((object)accessTokenResponse);
             }
@@ -78,22 +69,21 @@ namespace AzureMSALWebApp.Controllers
                         );
                     return View((object)response);
                 case "401":
-                    AuthenticationProperties properties = new AuthenticationProperties();
-                    ICollection<string> scopes = new string[]
-                    {
-                        OidcConstants.StandardScopes.OpenId,
-                        OidcConstants.StandardScopes.OfflineAccess,
-                        OidcConstants.StandardScopes.Profile
-                    }.Union(_options.Value.Scopes.Split(':')).ToList();
-
-                    properties.SetParameter<ICollection<string>>(OpenIdConnectParameterNames.Scope, scopes);
-                    return Challenge(properties, OpenIdConnectDefaults.AuthenticationScheme);
+                    return ReAuth();
                 case "500":
                     return View((object)accessTokenResponse);
             }
             return View((object)"Unknown response");
         }
+        public IActionResult ReAuth()
+        {
 
+            AuthenticationProperties props = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("Index", "Home", null, Request.Scheme)
+            };
+            return Challenge(props, OpenIdConnectDefaults.AuthenticationScheme);
+        }
         #region Helpers
         private async Task<string> GetAccessToken()
         {
@@ -109,12 +99,8 @@ namespace AzureMSALWebApp.Controllers
                     _cache,
                     app.UserTokenCache
                 );
-            IEnumerable<string> scopes = new string[]
-            {
-                OidcConstants.StandardScopes.OpenId,
-                OidcConstants.StandardScopes.Profile,
-                OidcConstants.StandardScopes.OfflineAccess
-            }.Union(_options.Value.Scopes.Split(';'));
+            //IEnumerable<string> scopes = _options.Value.Scopes.Split(";").Where(c => !string.IsNullOrEmpty(c));
+            IEnumerable<string> scopes = new string[] { "api://core/.default" };
             try
             {
                 var account = (await app.GetAccountsAsync()).FirstOrDefault();

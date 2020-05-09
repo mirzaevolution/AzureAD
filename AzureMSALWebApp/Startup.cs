@@ -65,11 +65,6 @@ namespace AzureMSALWebApp
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     options.ResponseType = ResponseTypes.CodeIdToken;
                     options.CallbackPath = _azOptions.CallbackPath;
-                    options.Resource = _azOptions.Resource;
-                    options.Scope.Add(OidcConstants.StandardScopes.OpenId);
-                    options.Scope.Add(OidcConstants.StandardScopes.Profile);
-                    options.Scope.Add(OidcConstants.StandardScopes.OfflineAccess);
-
                     options.Events.OnAuthorizationCodeReceived += OnAuthorizationCodeReceived;
                     options.TokenValidationParameters.ValidateIssuer = false;
                 });
@@ -85,7 +80,8 @@ namespace AzureMSALWebApp
             string redirectUri = context.TokenEndpointRequest.RedirectUri;
             string key = context.Principal.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier");
             string code = context.TokenEndpointRequest.Code;
-            IEnumerable<string> scopes = context.Options.Scope.Union(_azOptions.Scopes.Split(";").Where(c => !string.IsNullOrEmpty(c)));
+            //IEnumerable<string> scopes = _azOptions.Scopes.Split(";").Where(c => !string.IsNullOrEmpty(c));
+            IEnumerable<string> scopes = new string[] { "api://core/.default" };
             IDistributedCache cache = context.HttpContext.RequestServices.GetService<IDistributedCache>();
 
             IConfidentialClientApplication app = ConfidentialClientApplicationBuilder

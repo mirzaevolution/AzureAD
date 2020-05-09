@@ -26,7 +26,6 @@ namespace Rewind.WPFClient
     {
         private string _authority;
         private string _clientId;
-        private string _clientSecret;
         private string _redirectUri;
         private string _resourceUri;
         private string _targetApiBaseUri;
@@ -37,7 +36,6 @@ namespace Rewind.WPFClient
             InitializeComponent();
             _authority = ConfigurationManager.AppSettings["ADAuthority"];
             _clientId = ConfigurationManager.AppSettings["ADClientId"];
-            _clientSecret = ConfigurationManager.AppSettings["ADClientSecret"];
             _redirectUri = ConfigurationManager.AppSettings["ADRedirectUri"];
             _resourceUri = ConfigurationManager.AppSettings["ADResourceUri"];
             _targetApiBaseUri = ConfigurationManager.AppSettings["TargetAPIBaseUri"];
