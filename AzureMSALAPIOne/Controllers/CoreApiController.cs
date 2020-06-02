@@ -137,14 +137,16 @@ namespace AzureMSALAPIOne.Controllers
                     usernameOrEmail = User.FindFirstValue(ClaimTypes.Email);
                 }
             }
-            if (_memoryCache.TryGetValue(usernameOrEmail, out byte[] data))
+            if (!string.IsNullOrEmpty(usernameOrEmail))
             {
-                context.TokenCache.DeserializeMsalV3(data);
+                if (_memoryCache.TryGetValue(usernameOrEmail, out byte[] data))
+                {
+                    context.TokenCache.DeserializeMsalV3(data);
+                }
+                return Task.CompletedTask;
             }
-            else
-            {
-                context.TokenCache.DeserializeMsalV3(null);
-            }
+
+            context.TokenCache.DeserializeMsalV3(null);
             return Task.CompletedTask;
         }
     }

@@ -26,6 +26,7 @@ namespace BlobStorageImpersonation
         private readonly string _authority;
         private readonly string[] _scopes;
         private readonly string _redirectUri;
+        private readonly string _storageAccountName;
         private readonly string _fileTokenCacheLocation = "cache.dat";
         private static object _syncLock = new object();
         private IPublicClientApplication _appClient;
@@ -39,6 +40,7 @@ namespace BlobStorageImpersonation
             _authority = ConfigurationManager.AppSettings["Authority"];
             _scopes = ConfigurationManager.AppSettings["Scopes"].Split(';').Where(c => !string.IsNullOrEmpty(c)).ToArray();
             _redirectUri = ConfigurationManager.AppSettings["RedirectUri"];
+            _storageAccountName = ConfigurationManager.AppSettings["StorageAccountName"];
 
         }
 
@@ -50,14 +52,12 @@ namespace BlobStorageImpersonation
         {
             DisableAccess();
             await AuthenticateAsync();
-
             if (_authenticationResult != null)
 
             {
-
                 TokenCredential tokenCredential = new TokenCredential(_authenticationResult.AccessToken);
                 StorageCredentials storageCredentials = new StorageCredentials(tokenCredential);
-                _blobClient = new CloudStorageAccount(storageCredentials, "ave21corestorage", "core.windows.net", true).CreateCloudBlobClient();
+                _blobClient = new CloudStorageAccount(storageCredentials, _storageAccountName, "core.windows.net", true).CreateCloudBlobClient();
                 EnableAccess();
             }
         }
@@ -67,6 +67,7 @@ namespace BlobStorageImpersonation
             var accounts = await _appClient.GetAccountsAsync();
             if (accounts.Any())
             {
+
                 await _appClient.RemoveAsync(accounts.FirstOrDefault());
                 DisableAccess();
             }
@@ -145,7 +146,6 @@ namespace BlobStorageImpersonation
             {
                 try
                 {
-
                     _authenticationResult = await _appClient.AcquireTokenInteractive(_scopes)
                         .WithAccount(account)
                         .ExecuteAsync();
