@@ -1,0 +1,112 @@
+{
+  "id": "f98d8233-af8a-4a2f-a67c-13e2db25824c",
+  "acceptMappedClaims": null,
+  "accessTokenAcceptedVersion": null,
+  "addIns": [],
+  "allowPublicClient": null,
+  "appId": "bc12262c-7920-4f7b-891a-34e642cca7e1",
+  "appRoles": [],
+  "oauth2AllowUrlPathMatching": false,
+  "createdDateTime": "2020-06-01T18:03:02Z",
+  "groupMembershipClaims": "All",
+  "identifierUris": [
+    "api://skyline"
+  ],
+  "informationalUrls": {
+    "termsOfService": null,
+    "support": null,
+    "privacy": null,
+    "marketing": null
+  },
+  "keyCredentials": [],
+  "knownClientApplications": [],
+  "logoUrl": null,
+  "logoutUrl": null,
+  "name": "SkylineCoreApi",
+  "oauth2AllowIdTokenImplicitFlow": false,
+  "oauth2AllowImplicitFlow": false,
+  "oauth2Permissions": [
+    {
+      "adminConsentDescription": "Basic user access scope",
+      "adminConsentDisplayName": "Basic Access",
+      "id": "72f89d8f-e8ae-459f-bca3-b40f64334054",
+      "isEnabled": true,
+      "lang": null,
+      "origin": "Application",
+      "type": "User",
+      "userConsentDescription": "Basic user access scope",
+      "userConsentDisplayName": "basic-access",
+      "value": "basic-access"
+    }
+  ],
+  "oauth2RequirePostResponse": false,
+  "optionalClaims": {
+    "idToken": [
+      {
+        "name": "groups",
+        "source": null,
+        "essential": false,
+        "additionalProperties": []
+      }
+    ],
+    "accessToken": [
+      {
+        "name": "ctry",
+        "source": null,
+        "essential": false,
+        "additionalProperties": []
+      },
+      {
+        "name": "groups",
+        "source": null,
+        "essential": false,
+        "additionalProperties": []
+      }
+    ],
+    "saml2Token": [
+      {
+        "name": "groups",
+        "source": null,
+        "essential": false,
+        "additionalProperties": []
+      }
+    ]
+  },
+  "orgRestrictions": [],
+  "parentalControlSettings": {
+    "countriesBlockedForMinors": [],
+    "legalAgeGroupRule": "Allow"
+  },
+  "passwordCredentials": [],
+  "preAuthorizedApplications": [
+    {
+      "appId": "efb0273f-fe5d-462b-9999-408f9860b416",
+      "permissionIds": [
+        "72f89d8f-e8ae-459f-bca3-b40f64334054"
+      ]
+    }
+  ],
+  "publisherDomain": "skylinemgr30hotmail.onmicrosoft.com",
+  "replyUrlsWithType": [],
+  "requiredResourceAccess": [
+    {
+      "resourceAppId": "00000003-0000-0000-c000-000000000000",
+      "resourceAccess": [
+        {
+          "id": "e1fe6dd8-ba31-4d61-89e7-88639da4683d",
+          "type": "Scope"
+        }
+      ]
+    }
+  ],
+  "samlMetadataUrl": null,
+  "signInUrl": null,
+  "signInAudience": "AzureADMyOrg",
+  "tags": [],
+  "tokenEncryptionKeyId": null,
+  "verifiedPublisher": {
+    "displayName": null,
+    "verifiedPublisherId": null,
+    "addedDateTime": null
+  }
+}
