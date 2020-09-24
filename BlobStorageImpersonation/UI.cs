@@ -22,7 +22,6 @@ namespace BlobStorageImpersonation
     public partial class UI : Form
     {
         private readonly string _clientId;
-        private readonly string _clientSecret;
         private readonly string _authority;
         private readonly string[] _scopes;
         private readonly string _redirectUri;
@@ -36,7 +35,6 @@ namespace BlobStorageImpersonation
         {
             InitializeComponent();
             _clientId = ConfigurationManager.AppSettings["ClientId"];
-            _clientSecret = ConfigurationManager.AppSettings["ClientSecret"];
             _authority = ConfigurationManager.AppSettings["Authority"];
             _scopes = ConfigurationManager.AppSettings["Scopes"].Split(';').Where(c => !string.IsNullOrEmpty(c)).ToArray();
             _redirectUri = ConfigurationManager.AppSettings["RedirectUri"];

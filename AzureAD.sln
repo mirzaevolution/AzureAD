@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSC.AD", "MSC.AD\MSC.AD.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Learning", "Learning", "{4C6E9BD0-40F5-43F7-8F7B-227676E9CF06}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "From Docs", "From Docs", "{F48AA237-6F2C-45E5-B72F-87E0167E54FC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Azure AD", "Azure AD", "{F48AA237-6F2C-45E5-B72F-87E0167E54FC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureADMSAL", "AzureADMSAL\AzureADMSAL.csproj", "{FD92EDBB-C388-418C-BDCB-6DE76D43F10C}"
 EndProject
@@ -84,9 +84,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SBSender", "SBSender\SBSend
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Event hub", "Event hub", "{3E12A2C8-8747-4B47-BECD-4486451A7D97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventHubSender", "EventHubSender\EventHubSender.csproj", "{D8050D28-B87B-4E97-B739-271553380F7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventHubSender", "EventHubSender\EventHubSender.csproj", "{D8050D28-B87B-4E97-B739-271553380F7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventHubReceiver1", "EventHubReceiver1\EventHubReceiver1.csproj", "{68B46C84-EB4C-4B17-B41E-4DDFD999A2F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventHubReceiver1", "EventHubReceiver1\EventHubReceiver1.csproj", "{68B46C84-EB4C-4B17-B41E-4DDFD999A2F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

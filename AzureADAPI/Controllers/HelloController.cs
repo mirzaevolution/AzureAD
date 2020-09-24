@@ -56,9 +56,11 @@ namespace AzureADAPI.Controllers
                 ClientCredential clientCredential = new ClientCredential(_configuration["CurrentApiCreds:ClientId"], _configuration["CurrentApiCreds:ClientSecret"]);
                 string accessToken = await HttpContext.GetTokenAsync("access_token");
                 string assertionType = "urn:ietf:params:oauth:grant-type:jwt-bearer";
+
                 string userName = HttpContext.User.FindFirst(ClaimTypes.Upn) != null
                             ? HttpContext.User.FindFirst(ClaimTypes.Upn).Value
                              : HttpContext.User.FindFirst(ClaimTypes.Email).Value;
+
                 UserAssertion userAssertion = new UserAssertion(accessToken, assertionType, userName);
                 AuthenticationContext authenticationContext = new AuthenticationContext(
                         _configuration["TargetApi:Authority"]);

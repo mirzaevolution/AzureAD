@@ -41,7 +41,6 @@ namespace AzureMSALWebApp
             section.Bind(_azOptions);
             services.AddOptions();
             services.Configure<AzureAdModel>(section);
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -89,6 +88,8 @@ namespace AzureMSALWebApp
                 .WithAuthority(authority)
                 .WithRedirectUri(redirectUri)
                 .Build();
+
+
             TokenCacheHelper.Initialize(key: key,
                     distributedCache: cache,
                     tokenCache: app.UserTokenCache);
